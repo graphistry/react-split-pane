@@ -37,9 +37,9 @@ class SplitPane extends Component {
 
     componentDidMount() {
         this.setSize(this.props, this.state);
-        document.addEventListener('mouseup', this.onMouseUp);
-        document.addEventListener('mousemove', this.onMouseMove);
-        document.addEventListener('touchmove', this.onTouchMove);
+        document.addEventListener('mouseup', this.onMouseUp, true);
+        document.addEventListener('mousemove', this.onMouseMove, true);
+        document.addEventListener('touchmove', this.onTouchMove, true);
     }
 
     componentWillReceiveProps(props) {
@@ -47,9 +47,9 @@ class SplitPane extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('mouseup', this.onMouseUp);
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('touchmove', this.onTouchMove);
+        document.removeEventListener('mouseup', this.onMouseUp, true);
+        document.removeEventListener('mousemove', this.onMouseMove, true);
+        document.removeEventListener('touchmove', this.onTouchMove, true);
     }
 
     onMouseDown(event) {
@@ -58,12 +58,14 @@ class SplitPane extends Component {
             event,
             { touches: [{ clientX: event.clientX, clientY: event.clientY }] },
         );
-        this.onTouchStart(eventWithTouches);
+        this.onTouchStart(eventWithTouches, event);
     }
 
-    onTouchStart(event) {
+    onTouchStart(event, originalEvent = event) {
         if (this.props.allowResize) {
             unFocus(document, window);
+            originalEvent.preventDefault && originalEvent.preventDefault();
+            originalEvent.stopPropagation && originalEvent.stopPropagation();
             const position = this.props.split === 'vertical' ? event.touches[0].clientX : event.touches[0].clientY;
             if (typeof this.props.onDragStarted === 'function') {
                 this.props.onDragStarted();
@@ -81,13 +83,15 @@ class SplitPane extends Component {
             event,
             { touches: [{ clientX: event.clientX, clientY: event.clientY }] },
         );
-        this.onTouchMove(eventWithTouches);
+        this.onTouchMove(eventWithTouches, event);
     }
 
-    onTouchMove(event) {
+    onTouchMove(event, originalEvent = event) {
         if (this.props.allowResize) {
             if (this.state.active) {
                 unFocus(document, window);
+                originalEvent.preventDefault && originalEvent.preventDefault();
+                originalEvent.stopPropagation && originalEvent.stopPropagation();
                 const isPrimaryFirst = this.props.primary === 'first';
                 const ref = isPrimaryFirst ? this.pane1 : this.pane2;
                 if (ref) {
