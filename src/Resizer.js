@@ -20,10 +20,6 @@ class Resizer extends Component {
                     event.preventDefault();
                     this.props.onTouchStart(event);
                 }}
-                onTouchEnd={(event) => {
-                    event.preventDefault();
-                    this.props.onTouchEnd(event);
-                }}
             />
         );
     }
@@ -32,7 +28,6 @@ class Resizer extends Component {
 Resizer.propTypes = {
     onMouseDown: PropTypes.func.isRequired,
     onTouchStart: PropTypes.func.isRequired,
-    onTouchEnd: PropTypes.func.isRequired,
     prefixer: PropTypes.instanceOf(Prefixer).isRequired,
     split: PropTypes.oneOf(['vertical', 'horizontal']),
     className: PropTypes.string.isRequired,
