@@ -1,5 +1,5 @@
 {
-  "name": "react-split-pane",
+  "name": "@graphistry/react-split-pane",
   "description": "React split-pane component",
   "main": "index.js",
   "version": "0.1.59",
