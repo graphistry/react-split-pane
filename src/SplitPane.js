@@ -178,7 +178,15 @@ class SplitPane extends Component {
         const ref = this.props.primary === 'first' ? this.pane1 : this.pane2;
         let newSize;
         if (ref) {
-            newSize = props.size || (state && state.draggedSize) || props.defaultSize || props.minSize;
+            if (props.size !== undefined) {
+                newSize = props.size;
+            } else if (props.defaultSize !== undefined && this.props.defaultSize !== props.defaultSize) {
+                newSize = props.defaultSize;
+            } else if (state && state.draggedSize !== undefined) {
+                newSize = state.draggedSize;
+            } else {
+                newSize = props.defaultSize || props.minSize;
+            }
             ref.setState({
                 size: newSize,
             });
