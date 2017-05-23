@@ -7,8 +7,6 @@ import stylePropType from 'react-style-proptype';
 import Pane from './Pane';
 import Resizer from './Resizer';
 
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Safari/537.2';
-
 function unFocus(document, window) {
     if (document.selection) {
         document.selection.empty();
@@ -301,7 +299,7 @@ SplitPane.propTypes = {
 SplitPane.defaultProps = {
     allowResize: true,
     minSize: 50,
-    prefixer: new Prefixer({ userAgent: USER_AGENT, keepUnprefixed: true }),
+    prefixer: new Prefixer(),
     primary: 'first',
     split: 'vertical',
 };

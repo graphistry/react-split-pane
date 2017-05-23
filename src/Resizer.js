@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import Prefixer from 'inline-style-prefixer';
 import stylePropType from 'react-style-proptype';
 
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Safari/537.2';
-
 class Resizer extends React.Component {
     render() {
         const { className, onClick, onDoubleClick, onMouseDown, onTouchEnd, onTouchStart, prefixer, resizerClassName,
@@ -55,7 +53,7 @@ Resizer.propTypes = {
 };
 
 Resizer.defaultProps = {
-    prefixer: new Prefixer({ userAgent: USER_AGENT, keepUnprefixed: true }),
+    prefixer: new Prefixer(),
     resizerClassName: 'Resizer',
 };
 
