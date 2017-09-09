@@ -18,10 +18,6 @@ class Resizer extends React.Component {
                     event.preventDefault();
                     onTouchStart(event);
                 }}
-                onTouchEnd={(event) => {
-                    event.preventDefault();
-                    onTouchEnd(event);
-                }}
                 onClick={(event) => {
                     if (onClick) {
                         event.preventDefault();
@@ -45,7 +41,6 @@ Resizer.propTypes = {
     onDoubleClick: PropTypes.func,
     onMouseDown: PropTypes.func.isRequired,
     onTouchStart: PropTypes.func.isRequired,
-    onTouchEnd: PropTypes.func.isRequired,
     prefixer: PropTypes.instanceOf(Prefixer).isRequired,
     split: PropTypes.oneOf(['vertical', 'horizontal']),
     style: stylePropType,

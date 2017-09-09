@@ -100,7 +100,7 @@ class SplitPane extends React.Component {
 
     onTouchMove(event, originalEvent) {
         const _originalEvent = originalEvent || event;
-        const { allowResize, maxSize, minSize, onChange, split } = this.props;
+        const { allowResize, maxSize, minSize, onChange, split, step } = this.props;
         const { active, position } = this.state;
         if (allowResize && active) {
             unFocus(document, window);
@@ -116,7 +116,16 @@ class SplitPane extends React.Component {
                     const height = node.getBoundingClientRect().height;
                     const current = split === 'vertical' ? event.touches[0].clientX : event.touches[0].clientY;
                     const size = split === 'vertical' ? width : height;
-                    const newPosition = isPrimaryFirst ? (position - current) : (current - position);
+                    let positionDelta = position - current;
+                    if (step) {
+                        if (Math.abs(positionDelta) < step) {
+                            return;
+                        }
+                        // Integer division
+                        // eslint-disable-next-line no-bitwise
+                        positionDelta = ~~(positionDelta / step) * step;
+                    }
+                    const sizeDelta = isPrimaryFirst ? positionDelta : -positionDelta;
 
                     let newMaxSize = maxSize;
                     if ((maxSize !== undefined) && (maxSize <= 0)) {
@@ -128,7 +137,8 @@ class SplitPane extends React.Component {
                         }
                     }
 
-                    let newSize = size - newPosition;
+                    let newSize = size - sizeDelta;
+                    const newPosition = position - positionDelta;
 
                     if (newSize < minSize) {
                         newSize = minSize;
@@ -136,7 +146,7 @@ class SplitPane extends React.Component {
                         newSize = newMaxSize;
                     } else {
                         this.setState({
-                            position: current,
+                            position: newPosition,
                             resized: true,
                         });
                     }
@@ -192,9 +202,11 @@ class SplitPane extends React.Component {
             pane1Style: pane1StyleProps, pane2Style: pane2StyleProps, primary, prefixer, resizerClassName,
             resizerStyle, size, split, style: styleProps } = this.props;
         const disabledClass = allowResize ? '' : 'disabled';
+        const resizerClassNamesIncludingDefault = (resizerClassName ?
+              `${resizerClassName} Resizer` : resizerClassName);
 
         const style = Object.assign({},
-            styleProps || {}, {
+            {
                 display: 'flex',
                 flex: 1,
                 height: '100%',
@@ -205,7 +217,8 @@ class SplitPane extends React.Component {
                 WebkitUserSelect: 'text',
                 msUserSelect: 'text',
                 userSelect: 'text',
-            });
+            },
+	    styleProps || {});
 
         if (split === 'vertical') {
             Object.assign(style, {
@@ -249,10 +262,9 @@ class SplitPane extends React.Component {
                     onDoubleClick={onResizerDoubleClick}
                     onMouseDown={this.onMouseDown}
                     onTouchStart={this.onTouchStart}
-                    onTouchEnd={this.onMouseUp}
                     key="resizer"
                     ref={(node) => { this.resizer = node; }}
-                    resizerClassName={resizerClassName}
+                    resizerClassName={resizerClassNamesIncludingDefault}
                     split={split}
                     style={resizerStyle || {}}
                 />
@@ -294,6 +306,7 @@ SplitPane.propTypes = {
     pane1Style: stylePropType,
     pane2Style: stylePropType,
     resizerClassName: PropTypes.string,
+    step: PropTypes.number,
 };
 
 SplitPane.defaultProps = {
